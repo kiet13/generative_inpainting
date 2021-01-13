@@ -31,7 +31,7 @@ if __name__ == "__main__":
     with open(FLAGS.data_flist[FLAGS.dataset][0]) as f:
         fnames = f.read().splitlines()
     if FLAGS.guided:
-        fnames = [(fname, fname[:-4] + '_edge.jpg') for fname in fnames]
+        fnames = [(fname, fname.replace('train', FLAGS.guided_train_folder)) for fname in fnames]
         img_shapes = [img_shapes, img_shapes]
     data = ng.data.DataFromFNames(
         fnames, img_shapes, random_crop=FLAGS.random_crop,
@@ -46,7 +46,7 @@ if __name__ == "__main__":
             val_fnames = f.read().splitlines()
         if FLAGS.guided:
             val_fnames = [
-                (fname, fname[:-4] + '_edge.jpg') for fname in val_fnames]
+                (fname, fname.replace('val', FLAGS.guided_val_folder)) for fname in val_fnames]
         # progress monitor by visualizing static images
         for i in range(FLAGS.static_view_size):
             static_fnames = val_fnames[i:i+1]
