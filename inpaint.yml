@@ -4,15 +4,15 @@ num_gpus_per_job: 1  # number of gpus each job need
 num_cpus_per_job: 4  # number of gpus each job need
 num_hosts_per_job: 1
 memory_per_job: 32  # number of gpus each job need
-gpu_type: 'nvidia-tesla-p100'
+gpu_type: 'nvidia-rtx-2080'
 
 # parameters
 name: places2_gated_conv_v100  # any name
-model_restore: logs/celeba_hq_256  
-dataset: 'celebahq'  # 'tmnist', 'dtd', 'places2', 'celeba', 'imagenet', 'cityscapes'
+model_restore: 'logs/celeba_canny_guided'  # logs/places2_gated_conv
+dataset: 'celeba'  # 'tmnist', 'dtd', 'places2', 'celeba', 'imagenet', 'cityscapes'
 random_crop: False  # Set to false when dataset is 'celebahq', meaning only resize the images to img_shapes, instead of crop img_shapes from a larger raw image. This is useful when you train on images with different resolutions like places2. In these cases, please set random_crop to true.
 val: True  # true if you want to view validation results in tensorboard
-log_dir: logs/celeba_hq_256
+log_dir: logs/celeba_canny_guided
 
 gan: 'sngan'
 gan_loss_alpha: 1
@@ -22,7 +22,7 @@ random_seed: False
 padding: 'SAME'
 
 # training
-train_spe: 2000 #4000
+train_spe: 4000
 max_iters: 100000000
 viz_max_out: 10
 val_psteps: 2000
@@ -36,8 +36,8 @@ data_flist:
   ]
   # http://mmlab.ie.cuhk.edu.hk/projects/celeba.html, please to use random_crop: True
   celeba: [
-    'data/celeba/train_shuffled.flist',
-    'data/celeba/validation_static_view.flist'
+    'data_flist/celeba/train_shuffled.flist',
+    'data_flist/celeba/validation_static_view.flist'
   ]
   # http://places2.csail.mit.edu/, please download the high-resolution dataset and use random_crop: True
   places2: [
@@ -49,14 +49,19 @@ data_flist:
     'data/imagenet/train_shuffled.flist',
     'data/imagenet/validation_static_view.flist',
   ]
+  
+  paris: [
+    'data_flist/paris/train_shuffled.flist',
+    'data_flist/paris/validation_shuffled.flist'
+  ]
 
-static_view_size: 15
+static_view_size: 30
 img_shapes: [256, 256, 3]
 height: 128
 width: 128
 max_delta_height: 32
 max_delta_width: 32
-batch_size: 24
+batch_size: 16
 vertical_margin: 0
 horizontal_margin: 0
 
@@ -68,3 +73,7 @@ l1_loss_alpha: 1.
 # to tune
 guided: True
 edge_threshold: 0.6
+
+# guided folder
+guided_train_folder: 'celeb-train-canny-edge'
+guided_val_folder: 'celeb-val-canny-edge'
